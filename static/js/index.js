@@ -10,34 +10,35 @@ questions = {
     "Which sport is associated with the use of a snowboard?": ["Snowboarding", "Soccer", "Tennis", "Volleyball"]
 }
 
+//jumbled questions
+let randomQuestions = {};
+for (let key of Object.keys(questions).sort(() => Math.random() - 0.5)){
+    randomQuestions[key] = [questions[key].slice().sort(() => Math.random() - 0.5), questions[key][0]];
+}
+let keys = Object.keys(randomQuestions);
+let answer = randomQuestions[keys[0]][1];
+let answers = randomQuestions[keys[0]][0];
+let questionsNumber = Object.keys(questions).length;
+
 let buttonsId = ['button1', 'button2', 'button3', 'button4'].map((button) => {
     return document.getElementById(button);
 });
 
-let questionsNumber = Object.keys(questions).length;
 let score = 0;
-
-//jumbled questions
-let keys = Object.keys(questions).sort(() => Math.random() - 0.5);
-
-//jumbled answers
-let answers;
-//correct answer
-let answer;
-
 
 function changeText(){
     document.getElementById('question').innerText = `Question ${clickCount.toString()}/${questionsNumber}`;
     document.getElementById('text').innerText = `${keys[clickCount-1]}`;
    
     for(let i = 0; i < buttonsId.length; i++) {
-        buttonsId[i].innerText = answers[i];
+        buttonsId[i].innerText = randomQuestions[keys[clickCount-1]][0][i];
     }
+
+    answer = randomQuestions[keys[clickCount-1]][1];
+    answers = randomQuestions[keys[clickCount-1]][0];
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    answer = questions[keys[0]][0];
-    answers = (questions[keys[0]]).slice().sort(() => Math.random() - 0.5);
     changeText()
 });
 
@@ -61,15 +62,12 @@ function clickButton(event) {
         });
 
         if (clickCount > questionsNumber) {
-            document.getElementById('content').innerHTML = `<div id="result"> Your result: ${score} </div> <button id="buttonReboot"> Restart test </button>`;
+            document.getElementById('content').innerHTML = `<div id="result"> Your result: ${score}/${questionsNumber} </div> <button id="buttonReboot"> Restart test </button>`;
             document.getElementById('buttonReboot').addEventListener('click', function() {
                 location.reload();
             });
             return
         }
-
-        answer = questions[keys[clickCount-1]][0];
-        answers = questions[keys[clickCount-1]].slice().sort(() => Math.random() - 0.5);
         changeText()
     }, 1000);
 }
