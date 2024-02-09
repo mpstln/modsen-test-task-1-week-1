@@ -10,14 +10,16 @@ questions = {
     "Which sport is associated with the use of a snowboard?": ["Snowboarding", "Soccer", "Tennis", "Volleyball"]
 }
 
-let buttonsId = ['button1', 'button2', 'button3', 'button4'];
+let buttonsId = ['button1', 'button2', 'button3', 'button4'].map((button) => {
+    return document.getElementById(button);
+});
 
 let questionsNumber = Object.keys(questions).length;
-
 let score = 0;
 
 //jumbled questions
-let keys;
+let keys = Object.keys(questions).sort(() => Math.random() - 0.5);
+
 //jumbled answers
 let answers;
 //correct answer
@@ -29,12 +31,11 @@ function changeText(){
     document.getElementById('text').innerText = `${keys[clickCount-1]}`;
    
     for(let i = 0; i < buttonsId.length; i++) {
-        document.getElementById(buttonsId[i]).innerText = answers[i];
+        buttonsId[i].innerText = answers[i];
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    keys = Object.keys(questions).sort(() => Math.random() - 0.5);
     answer = questions[keys[0]][0];
     answers = (questions[keys[0]]).slice().sort(() => Math.random() - 0.5);
     changeText()
@@ -48,15 +49,15 @@ function clickButton(event) {
     }
 
     buttonsId.forEach(button => {
-        document.getElementById(button).style.backgroundColor = 'red';
-        document.getElementById(button).disabled = true;
+        button.style.backgroundColor = 'red';
+        button.disabled = true;
     });
-    document.getElementById(buttonsId[answers.indexOf(answer)]).style.backgroundColor = 'green';
+    buttonsId[answers.indexOf(answer)].style.backgroundColor = 'green';
         
     setTimeout(() => {
         buttonsId.forEach(button => {
-            document.getElementById(button).style.backgroundColor = '';
-            document.getElementById(button).disabled = false;
+            button.style.backgroundColor = '';
+            button.disabled = false;
         });
 
         if (clickCount > questionsNumber) {
