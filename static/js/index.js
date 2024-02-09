@@ -1,4 +1,4 @@
-let clickCount = 1;
+let clickCount = 0;
 questions = {
     "What is the capital of France?": ["Paris", "London", "Berlin", "Rome"],
     "What is the name of the largest desert in the world?": ["Sahara", "Amazon", "Gobi", "Kalimantan"],
@@ -27,15 +27,15 @@ let buttonsId = ['button1', 'button2', 'button3', 'button4'].map((button) => {
 let score = 0;
 
 function changeText(){
-    document.getElementById('question').innerText = `Question ${clickCount.toString()}/${questionsNumber}`;
-    document.getElementById('text').innerText = `${keys[clickCount-1]}`;
+    document.getElementById('question').innerText = `Question ${(clickCount+1).toString()}/${questionsNumber}`;
+    document.getElementById('text').innerText = `${keys[clickCount]}`;
    
     for(let i = 0; i < buttonsId.length; i++) {
-        buttonsId[i].innerText = randomQuestions[keys[clickCount-1]][0][i];
+        buttonsId[i].innerText = randomQuestions[keys[clickCount]][0][i];
     }
 
-    answer = randomQuestions[keys[clickCount-1]][1];
-    answers = randomQuestions[keys[clickCount-1]][0];
+    answer = randomQuestions[keys[clickCount]][1];
+    answers = randomQuestions[keys[clickCount]][0];
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -61,7 +61,7 @@ function clickButton(event) {
             button.disabled = false;
         });
 
-        if (clickCount > questionsNumber) {
+        if ((clickCount+1) > questionsNumber) {
             document.getElementById('content').innerHTML = `<div id="result"> Your result: ${score}/${questionsNumber} </div> <button id="buttonReboot"> Restart test </button>`;
             document.getElementById('buttonReboot').addEventListener('click', function() {
                 location.reload();
