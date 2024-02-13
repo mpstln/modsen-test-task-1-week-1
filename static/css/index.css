@@ -1,7 +1,7 @@
 :root {
   --font: Arial, sans-serif;
   --font-size: 2vw;
-  --button-color: #7bb4ad;
+  --button-color: #c580e5;
   --background-color: linear-gradient(to right, #ffcccc, #cc99ff);
   --text-color: #000000;
   --rectangle-color: white;
@@ -14,105 +14,93 @@
   --button-color: #4f2085;
 }
 
-
 body {
-    background: var(--background-color);
-    box-sizing: border-box;
-  }
+  background: var(--background-color);
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
 
-  .rectangle {
-    width: 50vw;
-    height: 40vw;
-    background-color: var(--rectangle-color);
-    border-radius: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0 auto;
-  }
+.rectangle {
+  width: 50vw;
+  height: 35vw;
+  padding: 1em;
+  background-color: var(--rectangle-color);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
 
-  .text-container {
-    color: var(--text-color);
-    font-size: var(--font-size);
-    font-family: var(--font);
-    position: relative;
-    width: 90%;
-    height: 80%;
-    padding: 5px;
-    margin: 0 auto;
-  }
+/* Text */
+.text-container, #result, #text, #question {
+  color: var(--text-color);
+  font-size: var(--font-size);
+  font-family: var(--font);
+  text-align: center;
+  margin-bottom: 1em;
+}
 
-    #result {
-      font-weight: bold;
-      position: absolute;
-      top: 20%; 
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 20px;
-    }
+#result, #question {
+  flex: 0 1 auto;
+  font-weight: bold;
+  margin: auto;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
 
-    #text {
-      position: absolute;
-      top: 15%; 
-      left: 50%;
-      transform: translateX(-50%);
-      padding-top: 20px;
-    }
-    
-    #question {
-      font-weight: bold;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 5%;
-    }
-  
-  .button-container {
-    position: absolute;
-    top: 60%; 
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  
-    .button-group {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 5px; 
-    }
-    
-    button {
-      width: 100%;
-      border-radius: 10px;
-      padding: 1.5em 2.5em;
-      box-sizing: border-box;
-      margin: 1%;
-      background-color: var(--button-color);
-      color: white;
-      border: 1px solid var(--button-color);
-      text-shadow: 0.2em 0.2em 0.4em #000000;
-      transition: background-color 0.3s, color 0.3s;
-      font-weight: bold;
-      font-size: var(--font-size);
-      font-family: var(--font);
-    }
-    
-    button:hover {
-      background-color: #45a049;
-      color: white;
-    }
-    
-    #buttonReboot {
-      position: absolute;
-      top: 50%; 
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 1em 1.5em;
-      width: auto;
-      height: auto;
-    }
+#text {
+  margin-left: 1em;
+}
 
-/* Night theme */
+/* Buttons */
+.button-container {
+  position: relative;
+  bottom: 1em;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+button {
+  width: 100%;
+  border-radius: 10px;
+  padding: 1.5em 2.5em;
+  box-sizing: border-box;
+  margin: 1%;
+  background-color: var(--button-color);
+  color: white;
+  border: 1px solid var(--button-color);
+  text-shadow: 0.2em 0.2em 0.4em #000000;
+  transition: background-color 0.3s, color 0.3s;
+  font-weight: bold;
+  font-size: var(--font-size);
+  font-family: var(--font);
+}
+
+button:hover {
+  background-color: #45a049;
+  color: white;
+}
+
+#buttonReboot {
+  position: absolute;
+  top: 50%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1em 1.5em;
+  width: auto;
+  height: auto;
+}
+
+/* Night theme checkbox*/
 #theme {
   position: absolute;
   top: 1%;
