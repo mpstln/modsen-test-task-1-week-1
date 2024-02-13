@@ -1,3 +1,6 @@
+const root = document.documentElement;
+
+
 let clickCount = 0;
 questions = {
     "What is the capital of France?": ["Paris", "London", "Berlin", "Rome"],
@@ -71,3 +74,26 @@ function clickButton(event) {
         changeText()
     }, 1000);
 }
+
+// Night theme
+const themeToggleCheckbox = document.getElementById('themeToggleCheckbox');
+const savedTheme = localStorage.getItem('selectedTheme');
+
+if (savedTheme === 'dark') {
+    root.classList.add('dark');
+    themeToggleCheckbox.checked = true;
+} 
+else {
+    root.classList.remove('dark');
+    themeToggleCheckbox.checked = false;
+}
+
+themeToggleCheckbox.addEventListener('change', () => {
+    if (themeToggleCheckbox.checked) {
+        root.classList.add('dark');
+        localStorage.setItem('selectedTheme', 'dark');
+    } else {
+        root.classList.remove('dark');
+        localStorage.setItem('selectedTheme', 'light');
+    }
+});
