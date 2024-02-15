@@ -1,10 +1,12 @@
 :root {
   --font: Arial, sans-serif;
   --font-size: 2vw;
+  --warning-font-size: 1vw;
   --button-color: #c580e5;
   --background-color: linear-gradient(to right, #ffcccc, #cc99ff);
   --text-color: #000000;
   --rectangle-color: white;
+  --button-hover-color: #50a150;
 }
 
 :root.dark {
@@ -12,6 +14,7 @@
   --rectangle-color: rgb(46, 42, 42);
   --text-color: white;
   --button-color: #4f2085;
+  --button-hover-color: #186118;
 }
 
 body {
@@ -37,7 +40,7 @@ body {
 }
 
 /* Text */
-.text-container, #result, #text, #question {
+.text-container, #result, #text, #question, #warning {
   color: var(--text-color);
   font-size: var(--font-size);
   font-family: var(--font);
@@ -53,8 +56,12 @@ body {
   margin-bottom: 1em;
 }
 
-#text {
+#text, #warning {
   margin-left: 1em;
+}
+
+#warning {
+  font-size: var(--warning-font-size);
 }
 
 /* Buttons */
@@ -86,7 +93,7 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: var(--button-hover-color);
   color: white;
 }
 
