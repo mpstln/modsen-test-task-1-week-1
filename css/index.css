@@ -7,14 +7,18 @@
   --text-color: #000000;
   --rectangle-color: white;
   --button-hover-color: #50a150;
+  --progress-bar-color: #2e2a2a;
+  --active-step-color: #c580e5;
 }
 
 :root.dark {
   --background-color: linear-gradient(to right, #49025f, #4e019b);
-  --rectangle-color: rgb(46, 42, 42);
+  --rectangle-color: #2e2a2a;
   --text-color: white;
   --button-color: #4f2085;
   --button-hover-color: #186118;
+  --progress-bar-color: #f1f1f1;
+  --active-step-color: #633796;
 }
 
 body {
@@ -29,7 +33,7 @@ body {
 
 .rectangle {
   width: 50vw;
-  height: 35vw;
+  height: 40vw;
   padding: 1em;
   background-color: var(--rectangle-color);
   border-radius: 20px;
@@ -62,6 +66,7 @@ body {
 
 #warning {
   font-size: var(--warning-font-size);
+  margin-bottom: 1em;
 }
 
 /* Buttons */
@@ -160,4 +165,64 @@ button:hover {
 
 .theme-checkbox:checked {
   background-position: 100%;
+}
+
+/* Progress bar */
+.containerProgressBar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vw;
+  max-width: 50vw;
+  width: 100%;
+}
+
+.containerProgressBar .steps {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.steps .circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5vw;
+  width: 2.5vw;
+  color: var(--text-color);
+  font-size: 1.1vw;
+  font-weight: 500;
+  border-radius: 50%;
+  background: var(--rectangle-color);
+  border: 0.25vw solid var(--progress-bar-color);
+  transition: all 200ms ease;
+  transition-delay: 0s;
+  z-index: 1;
+}
+.steps .circle.active {
+  transition-delay: 100ms;
+  border-color: var(--active-step-color);
+  color: var(--active-step-color);
+}
+.steps .progress-bar {
+  position: absolute;
+  height: 0.5vw;
+  width: 100%;
+  background: var(--progress-bar-color);
+}
+
+.progress-bar .indicator {
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  background: var(--active-step-color);
+  transition: all 300ms ease;
+}
+.steps .circle {
+  font-size: 2vw;
+}
+.containerProgressBar .steps {
+  flex-wrap: wrap;
 }

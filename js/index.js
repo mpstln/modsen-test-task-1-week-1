@@ -40,7 +40,7 @@ let questions = [
         question: "Which sport is associated with the use of a snowboard?",
         answers: ["Snowboarding", "Soccer", "Tennis", "Volleyball"],
         answer: "Snowboarding",
-    }
+    },
 ];
 
 
@@ -65,9 +65,14 @@ class Quiz {
 
         this.userAnswer = [];
         this.events = [];
-        this.timer;
+        this.timer = null;
+        this.interval = null;
+        this.remainingTime = 0;
+
+        this.createProgressBar();
+        this.updateQuestion();
     }
-    start(event){
+    click(event){
         this.userAnswer.push(event.innerText);
         this.events.push(event);
         event.style.backgroundColor = '#2a9d8f';
@@ -77,10 +82,7 @@ class Quiz {
                 i.style.backgroundColor = '';
                 i.disabled = false;
             }
-            if (this.timer) {
-                clearTimeout(this.timer);
-                this.timer = null;
-            }
+            this.stopTimer();
             this.end(this.userAnswer);
             this.userAnswer = [];
             this.events = [];
@@ -111,19 +113,41 @@ class Quiz {
                 this.results();
                 return
             }
+            this.updateProgressBar();
             this.updateQuestion();
         }, 1000);
     }
+    //Timer
     questionWithTimer(time) {
         if (!this.timer) {
             if (time) {
+                this.remainingTime = time;
                 this.timer = setTimeout(() => {
+                    this.stopTimer();
                     this.end([]);
                 }, time);
+
+
+                this.interval = setInterval(() => {
+                    this.remainingTime -= 1000;
+                    this.updateWarning(this.remainingTime/1000);
+                }, 1000);
             }
         }
     }
-    answerButtons(){
+    stopTimer() {
+        if (this.timer) {
+            clearTimeout(this.timer);
+            this.timer = null;
+        }
+        if (this.interval) {
+            clearInterval(this.interval);
+            this.interval = null;
+        }
+        this.remainingTime = 0;
+    }
+    //Check answers
+    answerButtons() {
         let answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
         let buttons  = [];
         for (let button of this.buttonsId) {
@@ -132,42 +156,6 @@ class Quiz {
             }
         }
         return buttons;
-    }
-    checkNumberOfAnswers() {
-        if (this.questions[this.randomQuestions[this.questionNumber]].responsesNumber) {
-            return this.questions[this.randomQuestions[this.questionNumber]].responsesNumber;
-        }
-        return 1;
-    }
-    randomizeArray(array) {
-        return array.sort(() => Math.random()-0.5);
-    }
-    answerToArray(answer) {
-        return Array.isArray(answer) ? answer : [answer];
-    }
-    madeWarning()  {
-        let warning = '\u200B';
-        if (this.questions[this.randomQuestions[this.questionNumber]].timer) {
-            warning += `Time left: ${this.questions[this.randomQuestions[this.questionNumber]].timer/1000} seconds\n`;
-        }
-        if (this.questions[this.randomQuestions[this.questionNumber]].responsesNumber) {
-            warning += `Select ${this.checkNumberOfAnswers()} answers\n`;
-        }
-        return warning
-    }
-    updateQuestion() {
-        if (this.questions[this.randomQuestions[this.questionNumber]].timer) {
-            this.questionWithTimer(this.questions[this.randomQuestions[this.questionNumber]].timer);
-        }
-
-        this.questionId.innerText = `Question ${(this.questionNumber+1).toString()}/${this.randomQuestions.length}`;
-        this.textId.innerText = `${this.questions[this.randomQuestions[this.questionNumber]].question}`;
-        this.warningId.innerText = this.madeWarning();
-        
-        let answers = this.randomizeArray(this.questions[this.randomQuestions[this.questionNumber]].answers);
-        for(let i = 0; i < this.buttonsId.length; i++) {
-            this.buttonsId[i].innerText = answers[i];
-        }
     }
     checkAnswer(userAnswer) {
         let answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
@@ -181,6 +169,83 @@ class Quiz {
         const sortedAnswer = answer.slice().sort();
         return sortedUserAnswer.every((value, index) => value === sortedAnswer[index]);
     }
+    checkNumberOfAnswers() {
+        if (this.questions[this.randomQuestions[this.questionNumber]].responsesNumber) {
+            return this.questions[this.randomQuestions[this.questionNumber]].responsesNumber;
+        }
+        return 1;
+    }
+    //Progress bar
+    updateProgressBar() {
+        const circles = document.querySelectorAll(".circle");
+        const progressBar = document.querySelector(".indicator");
+        let currentStep = this.questionNumber + 1;
+
+        circles.forEach((circle, index) => {
+            circle.classList[`${index < currentStep ? "add" : "remove"}`]("active");
+        });
+        progressBar.style.width = `${((currentStep - 1) / (circles.length - 1)) * 100}%`;
+    }
+    createProgressBar() {
+        let container = document.querySelector('.containerProgressBar');
+        
+        const stepsContainer = document.createElement('div');
+        stepsContainer.className = 'steps';
+        container.appendChild(stepsContainer);
+        
+        for (let i = 1; i <= this.randomQuestions.length; i++) {
+            const circle = document.createElement('span');
+            circle.className = 'circle';
+            circle.textContent = i.toString();
+            if (i === 1) {
+                circle.classList.add('active');
+            }
+            stepsContainer.appendChild(circle);
+        }
+        
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        const indicator = document.createElement('span');
+        indicator.className = 'indicator';
+        progressBar.appendChild(indicator);
+        stepsContainer.appendChild(progressBar);
+    }
+    //Update text
+    madeWarning(time, number) {
+        let warning = '\u200B\n\u200B';
+        if (this.questions[this.randomQuestions[this.questionNumber]].timer) {
+            warning += `Time left: ${time ? time : this.questions[this.randomQuestions[this.questionNumber]].timer/1000} seconds\n`;
+        }
+        if (this.questions[this.randomQuestions[this.questionNumber]].responsesNumber) {
+            warning += `Select ${number ? number : this.checkNumberOfAnswers()} answers\n`;
+        }
+        return warning
+    }
+    updateWarning(time = null, number = null) {
+        this.warningId.innerText = this.madeWarning(time, number);
+    }
+    updateQuestion() {
+        if (this.questions[this.randomQuestions[this.questionNumber]].timer) {
+            this.questionWithTimer(this.questions[this.randomQuestions[this.questionNumber]].timer);
+        }
+
+        this.questionId.innerText = `Question ${(this.questionNumber+1).toString()}/${this.randomQuestions.length}`;
+        this.textId.innerText = `${this.questions[this.randomQuestions[this.questionNumber]].question}`;
+        this.updateWarning();
+        
+        let answers = this.randomizeArray(this.questions[this.randomQuestions[this.questionNumber]].answers);
+        for(let i = 0; i < this.buttonsId.length; i++) {
+            this.buttonsId[i].innerText = answers[i];
+        }
+    }
+    //Other
+    randomizeArray(array) {
+        return array.sort(() => Math.random()-0.5);
+    }
+    answerToArray(answer) {
+        return Array.isArray(answer) ? answer : [answer];
+    }
+    //Results
     results() {
         document.getElementById('content').innerHTML = `<div id="result"> Your result: ${this.score}/${this.randomQuestions.length} </div> <button id="buttonReboot"> Restart test </button>`;
         document.getElementById('buttonReboot').addEventListener('click', function() {
@@ -191,11 +256,8 @@ class Quiz {
 
 //Quiz
 const quiz = new Quiz(questions);
-document.addEventListener('DOMContentLoaded', function() {
-    quiz.updateQuestion();
-});
 function clickButton(event) {
-    quiz.start(event.target);
+    quiz.click(event.target);
 }
 
 // Night theme
