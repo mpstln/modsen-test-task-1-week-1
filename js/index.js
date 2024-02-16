@@ -16,7 +16,7 @@ let questions = [
         answer: "Hummingbird",
     },
     {
-        question: "Which language is used for web development?",
+        question: "What languages ​​are used in web development?",
         answers: ["JavaScript", "Python", "TypeScript", "C"],
         responsesNumber: 2,
         answer: ["JavaScript", "TypeScript"],
@@ -45,33 +45,32 @@ let questions = [
 
 
 class Quiz {
+    buttonsId = ['button1', 'button2', 'button3', 'button4'].map((button) => {
+        return document.getElementById(button);
+    });
+    questionId = document.getElementById('question');
+    textId = document.getElementById('text');
+    warningId = document.getElementById('warning');
+        
+    questionNumber = 0;
+    #score = 0;
+
+    userAnswer = [];
+    events = [];
+    timer = null;
+    interval = null;
+    remainingTime = 0;
+
     constructor(questions) {
         this.questions = questions;
         this.randomQuestions = [];
-        for (let i = 0; i < questions.length; i++) {
-            this.randomQuestions.push(i);
-        }
+        this.questions.forEach((_,index) => {this.randomQuestions.push(index)})
         this.randomQuestions = this.randomizeArray(this.randomQuestions);
-
-        this.buttonsId = ['button1', 'button2', 'button3', 'button4'].map((button) => {
-            return document.getElementById(button);
-        });
-        this.questionId = document.getElementById('question');
-        this.textId = document.getElementById('text');
-        this.warningId = document.getElementById('warning');
-        
-        this.questionNumber = 0;
-        this.score = 0;
-
-        this.userAnswer = [];
-        this.events = [];
-        this.timer = null;
-        this.interval = null;
-        this.remainingTime = 0;
-
         this.createProgressBar();
         this.updateQuestion();
     }
+    
+
     click(event){
         this.userAnswer.push(event.innerText);
         this.events.push(event);
@@ -89,18 +88,13 @@ class Quiz {
         }
     }
     end(userAnswer) {
-        if (this.checkAnswer(userAnswer)) {
-            this.score++;
-        }
+        if (this.#checkAnswer(userAnswer)) this.#score++;
         this.buttonsId.forEach(button => {
             button.style.backgroundColor = '#8a2424';
             button.disabled = true;
         });
-        let answerButtons = this.answerButtons();
-        console.log(answerButtons);
-        answerButtons.forEach(button => {
-            button.style.backgroundColor = '#186118';
-        });
+        let answerButtons = this.#answerButtons();
+        answerButtons.forEach(button => {button.style.backgroundColor = '#186118'});
 
         setTimeout(() => {
             this.buttonsId.forEach(button => {
@@ -127,7 +121,6 @@ class Quiz {
                     this.end([]);
                 }, time);
 
-
                 this.interval = setInterval(() => {
                     this.remainingTime -= 1000;
                     this.updateWarning(this.remainingTime/1000);
@@ -147,24 +140,19 @@ class Quiz {
         this.remainingTime = 0;
     }
     //Check answers
-    answerButtons() {
+    #answerButtons() {
         let answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
         let buttons  = [];
-        for (let button of this.buttonsId) {
-            if (answer.includes(button.textContent)) {
-                buttons.push(button);
-            }
-        }
+        this.buttonsId.forEach((button) => {
+            if (answer.includes(button.textContent)) buttons.push(button);
+        })
         return buttons;
     }
-    checkAnswer(userAnswer) {
+    #checkAnswer(userAnswer) {
+        if (!Array.isArray(userAnswer)) throw new Error('This is not an array');
+
         let answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
-        if (!Array.isArray(userAnswer)) {
-            throw new Error('This is not an array');
-        }
-        if (userAnswer.length !== answer.length) {
-            return false;
-        }
+        if (userAnswer.length !== answer.length) return false;
         const sortedUserAnswer = userAnswer.slice().sort();
         const sortedAnswer = answer.slice().sort();
         return sortedUserAnswer.every((value, index) => value === sortedAnswer[index]);
@@ -197,9 +185,7 @@ class Quiz {
             const circle = document.createElement('span');
             circle.className = 'circle';
             circle.textContent = i.toString();
-            if (i === 1) {
-                circle.classList.add('active');
-            }
+            if (i === 1) circle.classList.add('active');
             stepsContainer.appendChild(circle);
         }
         
@@ -234,23 +220,15 @@ class Quiz {
         this.updateWarning();
         
         let answers = this.randomizeArray(this.questions[this.randomQuestions[this.questionNumber]].answers);
-        for(let i = 0; i < this.buttonsId.length; i++) {
-            this.buttonsId[i].innerText = answers[i];
-        }
+        for(let i = 0; i < this.buttonsId.length; i++) this.buttonsId[i].innerText = answers[i];
     }
     //Other
-    randomizeArray(array) {
-        return array.sort(() => Math.random()-0.5);
-    }
-    answerToArray(answer) {
-        return Array.isArray(answer) ? answer : [answer];
-    }
+    randomizeArray = (array) => {return array.sort(() => Math.random()-0.5);}
+    answerToArray = (answer) => {return Array.isArray(answer) ? answer : [answer];}
     //Results
     results() {
-        document.getElementById('content').innerHTML = `<div id="result"> Your result: ${this.score}/${this.randomQuestions.length} </div> <button id="buttonReboot"> Restart test </button>`;
-        document.getElementById('buttonReboot').addEventListener('click', function() {
-            location.reload();
-        });
+        document.getElementById('content').innerHTML = `<div id="result"> Your result: ${this.#score}/${this.randomQuestions.length} </div> <button id="buttonReboot"> Restart test </button>`;
+        document.getElementById('buttonReboot').addEventListener('click', function() {location.reload()});
     }
 }
 
