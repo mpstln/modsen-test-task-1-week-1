@@ -1,48 +1,4 @@
-let questions = [
-    {
-        question: "What is the capital of France?",
-        answers: ["Paris", "London", "Berlin", "Rome"],
-        answer: "Paris",
-    },
-    {
-        question: "What is the name of the largest desert in the world?",
-        answers: ["Sahara", "Amazon", "Gobi", "Kalimantan"],
-        timer: 10000,
-        answer: "Sahara",
-    },
-    {
-        question: "What is the name of the smallest bird in the world?",
-        answers: ["Hummingbird", "Ostrich", "Penguin", "Flamingo"],
-        answer: "Hummingbird",
-    },
-    {
-        question: "What languages ​​are used in web development?",
-        answers: ["JavaScript", "Python", "TypeScript", "C"],
-        responsesNumber: 2,
-        answer: ["JavaScript", "TypeScript"],
-    },
-    {
-        question: "In which year was the company Google founded?",
-        answers: ["1998", "2005", "1995", "2000"],
-        answer: "1998",
-    },
-    {
-        question: "Which fruit is a source of vitamin C?",
-        answers: ["Orange", "Apple", "Banana", "Watermelon"],
-        answer: "Orange",
-    },
-    {
-        question: "Which gas is the main component of the air?",
-        answers: ["Nitrogen", "Carbon dioxide", "Hydrogen", "Oxygen"],
-        answer: "Nitrogen",
-    },
-    {
-        question: "Which sport is associated with the use of a snowboard?",
-        answers: ["Snowboarding", "Soccer", "Tennis", "Volleyball"],
-        answer: "Snowboarding",
-    },
-];
-
+import { questions } from './constants.js';
 
 class Quiz {
     buttonsId = ['button1', 'button2', 'button3', 'button4'].map((button) => {
@@ -141,7 +97,7 @@ class Quiz {
     }
     //Check answers
     #answerButtons() {
-        let answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
+        const answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
         let buttons  = [];
         this.buttonsId.forEach((button) => {
             if (answer.includes(button.textContent)) buttons.push(button);
@@ -151,7 +107,7 @@ class Quiz {
     #checkAnswer(userAnswer) {
         if (!Array.isArray(userAnswer)) throw new Error('This is not an array');
 
-        let answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
+        const answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
         if (userAnswer.length !== answer.length) return false;
         const sortedUserAnswer = userAnswer.slice().sort();
         const sortedAnswer = answer.slice().sort();
