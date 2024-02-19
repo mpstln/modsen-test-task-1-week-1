@@ -1,9 +1,7 @@
 import { questions } from './constants.js';
 
 class Quiz {
-    buttonsId = ['button1', 'button2', 'button3', 'button4'].map((button) => {
-        return document.getElementById(button);
-    });
+    buttonsId = document.querySelectorAll('.button-group button');
     questionId = document.getElementById('question');
     textId = document.getElementById('text');
     warningId = document.getElementById('warning');
@@ -25,26 +23,39 @@ class Quiz {
         this.createProgressBar();
         this.updateQuestion();
     }
-    
-
     click(event){
-        this.userAnswer.push(event.innerText);
-        this.events.push(event);
-        event.style.backgroundColor = '#2a9d8f';
-        event.disabled = true;
-        if (this.userAnswer.length >= this.checkNumberOfAnswers()) {
-            for (let i of this.events) {
-                i.style.backgroundColor = '';
-                i.disabled = false;
+        try {
+            this.userAnswer.push(event.innerText);
+            this.events.push(event);
+            event.style.backgroundColor = '#2a9d8f';
+            event.disabled = true;
+            if (this.userAnswer.length >= this.checkNumberOfAnswers()) {
+                for (let ev of this.events) {
+                    ev.style.backgroundColor = '';
+                    ev.disabled = false;
+                }
+                this.stopTimer();
+                this.end(this.userAnswer);
+                this.userAnswer = [];
+                this.events = [];
             }
-            this.stopTimer();
-            this.end(this.userAnswer);
-            this.userAnswer = [];
-            this.events = [];
+        } catch (error) {
+            console.error('An error occurred in click event: ', error);
         }
     }
-    end(userAnswer) {
-        if (this.#checkAnswer(userAnswer)) this.#score++;
+    async end(userAnswer) {
+        try {
+            if (this.#checkAnswer(userAnswer)) this.#score++;
+            await this.highlightingAnswers();
+            this.questionNumber++;
+            if (this.questionNumber >= this.randomQuestions.length) return this.results();
+            this.updateProgressBar();
+            this.updateQuestion();
+        } catch (error) {
+            console.error('An error occurred in end method: ', error);
+        }
+    }
+    async highlightingAnswers(){
         this.buttonsId.forEach(button => {
             button.style.backgroundColor = '#8a2424';
             button.disabled = true;
@@ -52,20 +63,15 @@ class Quiz {
         let answerButtons = this.#answerButtons();
         answerButtons.forEach(button => {button.style.backgroundColor = '#186118'});
 
-        setTimeout(() => {
-            this.buttonsId.forEach(button => {
-                button.style.backgroundColor = '';
-                button.disabled = false;
-            });
-    
-            this.questionNumber++;
-            if (this.questionNumber >= this.randomQuestions.length) {
-                this.results();
-                return
-            }
-            this.updateProgressBar();
-            this.updateQuestion();
-        }, 1000);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                this.buttonsId.forEach(button => {
+                    button.style.backgroundColor = '';
+                    button.disabled = false;
+                });
+                resolve();
+            }, 1000);
+        });
     }
     //Timer
     questionWithTimer(time) {
@@ -98,6 +104,7 @@ class Quiz {
     //Check answers
     #answerButtons() {
         const answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
+        if (!answer) throw new Error('No answer');
         let buttons  = [];
         this.buttonsId.forEach((button) => {
             if (answer.includes(button.textContent)) buttons.push(button);
@@ -105,9 +112,12 @@ class Quiz {
         return buttons;
     }
     #checkAnswer(userAnswer) {
+        if (!userAnswer) throw new Error('No user answer');
         if (!Array.isArray(userAnswer)) throw new Error('This is not an array');
 
         const answer = this.answerToArray(this.questions[this.randomQuestions[this.questionNumber]].answer);
+        if (!answer) throw new Error('No answer');
+
         if (userAnswer.length !== answer.length) return false;
         const sortedUserAnswer = userAnswer.slice().sort();
         const sortedAnswer = answer.slice().sort();
@@ -164,7 +174,11 @@ class Quiz {
         return warning
     }
     updateWarning(time = null, number = null) {
-        this.warningId.innerText = this.madeWarning(time, number);
+        try {
+            this.warningId.innerText = this.madeWarning(time, number);
+        } catch (error) {
+            console.error('An error occurred in updateWarning: ', error);
+        }
     }
     updateQuestion() {
         if (this.questions[this.randomQuestions[this.questionNumber]].timer) {
@@ -189,9 +203,20 @@ class Quiz {
 }
 
 //Quiz
-const quiz = new Quiz(questions);
-function clickButton(event) {
-    quiz.click(event.target);
+try {
+    const quiz = new Quiz(questions);
+    const buttons = document.querySelectorAll('.button-group button');
+    buttons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            try {
+                quiz.click(event.target);
+            } catch (error) {
+                console.error('An error occurred in button click event: ', error);
+            }
+        });
+    });
+} catch (error) {
+    console.error('An error occurred while initializing Quiz and buttons: ', error);
 }
 
 // Night theme

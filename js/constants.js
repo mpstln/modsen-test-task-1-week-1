@@ -8,8 +8,8 @@ export const questions = [
     {
         question: "What is the name of the largest desert in the world?",
         answers: ["Sahara", "Amazon", "Gobi", "Kalimantan"],
-        timer: 10000,
         answer: "Sahara",
+        timer: 10000,
     },
     {
         question: "What is the name of the smallest bird in the world?",
