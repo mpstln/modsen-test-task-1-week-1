@@ -1,8 +1,6 @@
-// const assert = require('assert');
-import assert from 'assert'
-import { Quiz } from '../js/Quiz.js'
-import { JSDOM } from 'jsdom'
-import fs from 'fs'
+import { Quiz } from '../js/quiz.js';
+import { JSDOM } from 'jsdom';
+import fs from 'fs';
 
 describe('Quiz', () => {
   let quiz
@@ -32,11 +30,11 @@ describe('Quiz', () => {
   })
 
   it('should initialize correctly', () => {
-    assert.strictEqual(quiz.questionNumber, 0)
+    expect(quiz.questionNumber).toBe(0);
   })
   it('should stop timer correctly', () => {
     quiz.questionWithTimer(5000)
     quiz.stopTimer()
-    assert.strictEqual(quiz.remainingTime, 0)
+    expect(quiz.remainingTime).toBe(0);
   })
 })
