@@ -1,24 +1,42 @@
+@colors: {
+  pink: #c580e5;
+  lightPink: #ffcccc;
+  black: #000000;
+  white: #ffffff;
+  green: #50a150;
+  gray: #2e2a2a;
+  darkWhite: #f1f1f1;
+  darkGreen: #186118;
+  purple: #633796;
+  darkPurple: #4f2085;
+  pinkGradient: linear-gradient(to right, #ffcccc, #cc99ff);
+  purpleGradient: linear-gradient(to right, #49025f, #4e019b);
+};
+
 :root {
   --font: Arial, sans-serif;
   --font-size: 2vw;
   --warning-font-size: 1vw;
-  --button-color: #c580e5;
-  --background-color: linear-gradient(to right, #ffcccc, #cc99ff);
-  --text-color: #000000;
-  --rectangle-color: #ffffff;
-  --button-hover-color: #50a150;
-  --progress-bar-color: #2e2a2a;
-  --active-step-color: #c580e5;
+
+  --button-color: @colors[pink];
+  --background-color: @colors[pinkGradient];
+  --text-color: @colors[black];
+  --rectangle-color: @colors[white];
+  --button-hover-color: @colors[green];
+  --progress-bar-color: @colors[gray];
+  --active-step-color: @colors[pink];
 }
+
 :root.dark {
-  --background-color: linear-gradient(to right, #49025f, #4e019b);
-  --rectangle-color: #2e2a2a;
-  --text-color: #ffffff;
-  --button-color: #4f2085;
-  --button-hover-color: #186118;
-  --progress-bar-color: #f1f1f1;
-  --active-step-color: #633796;
+  --background-color: @colors[purpleGradient];
+  --rectangle-color: @colors[gray];
+  --text-color: @colors[white];
+  --button-color: @colors[darkPurple];
+  --button-hover-color: @colors[darkGreen];
+  --progress-bar-color: @colors[darkWhite];
+  --active-step-color: @colors[purple];
 }
+
 body {
   background: var(--background-color);
   position: relative;
@@ -28,6 +46,7 @@ body {
   justify-content: center;
   height: 100vh;
 }
+
 .rectangle {
   width: 50vw;
   height: 40vw;
@@ -39,44 +58,45 @@ body {
   justify-content: flex-start;
   align-items: center;
 }
+
 /* Text */
-.text-container,
-#result,
-#text,
-#question,
-#warning {
+.text-container, #result, #text, #question, #warning {
   color: var(--text-color);
   font-size: var(--font-size);
   font-family: var(--font);
   text-align: center;
   margin-bottom: 1em;
 }
-#result,
-#question {
+
+#result, #question {
   flex: 0 1 auto;
   font-weight: bold;
   margin: auto;
   margin-top: 1em;
   margin-bottom: 1em;
 }
-#text,
-#warning {
+
+#text, #warning {
   margin-left: 1em;
 }
+
 #warning {
   font-size: var(--warning-font-size);
   margin-bottom: 1em;
 }
+
 /* Buttons */
 .button-container {
   position: relative;
   bottom: 1em;
 }
+
 .button-group {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
+
 button {
   cursor: pointer;
   width: 100%;
@@ -85,29 +105,33 @@ button {
   box-sizing: border-box;
   margin: 1%;
   background-color: var(--button-color);
-  color: #ffffff;
+  color: @colors[white];
   border: 1px solid var(--button-color);
-  text-shadow: 0.2em 0.2em 0.4em #000000;
+  text-shadow: 0.2em 0.2em 0.4em @colors[black];
   transition: background-color 0.3s, color 0.3s;
   font-weight: bold;
   font-size: var(--font-size);
   font-family: var(--font);
 }
+
 button:hover {
   background-color: var(--button-hover-color);
-  color: #ffffff;
+  color: @colors[white];
 }
+
 #buttonReboot {
   margin-top: 20%;
   width: auto;
   height: auto;
 }
+
 /* Night theme checkbox*/
 #theme {
   position: absolute;
   top: 1%;
   right: 1%;
 }
+
 .theme-checkbox {
   z-index: 2;
   --toggle-size: 1vw;
@@ -129,6 +153,7 @@ button:hover {
   cursor: pointer;
   font-size: var(--toggle-size);
 }
+
 .theme-checkbox::before {
   content: "";
   width: 2.25em;
@@ -146,13 +171,16 @@ button:hover {
   -o-transition: 0.4s;
   transition: 0.4s;
 }
+
 .theme-checkbox:checked::before {
   left: calc(100% - 2.25em - 0.438em);
   background-position: 0;
 }
+
 .theme-checkbox:checked {
   background-position: 100%;
 }
+
 /* Progress bar */
 .containerProgressBar {
   display: flex;
@@ -162,6 +190,7 @@ button:hover {
   max-width: 50vw;
   width: 100%;
 }
+
 .containerProgressBar .steps {
   display: flex;
   width: 100%;
@@ -169,6 +198,7 @@ button:hover {
   justify-content: space-between;
   position: relative;
 }
+
 .steps .circle {
   display: flex;
   align-items: center;
@@ -196,6 +226,7 @@ button:hover {
   width: 100%;
   background: var(--progress-bar-color);
 }
+
 .progress-bar .indicator {
   position: absolute;
   height: 100%;
@@ -209,6 +240,7 @@ button:hover {
 .containerProgressBar .steps {
   flex-wrap: wrap;
 }
+
 @media (max-width: 768px) {
   :root {
     --font-size: 3.5vw;
@@ -228,6 +260,7 @@ button:hover {
     margin: 2%;
   }
 }
+
 @media (max-width: 480px) {
   :root {
     --font-size: 5vw;
