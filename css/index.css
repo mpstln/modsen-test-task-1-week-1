@@ -2,6 +2,7 @@
   --font: Arial, sans-serif;
   --font-size: 2vw;
   --warning-font-size: 1vw;
+
   --button-color: #c580e5;
   --background-color: linear-gradient(to right, #ffcccc, #cc99ff);
   --text-color: #000000;
@@ -104,11 +105,7 @@ button:hover {
 }
 
 #buttonReboot {
-  position: absolute;
-  top: 50%; 
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 1em 1.5em;
+  margin-top: 20%;
   width: auto;
   height: auto;
 }
@@ -121,6 +118,7 @@ button:hover {
 }
 
 .theme-checkbox {
+  z-index: 2;
   --toggle-size: 1vw;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -226,4 +224,38 @@ button:hover {
 }
 .containerProgressBar .steps {
   flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --font-size: 3.5vw;
+    --warning-font-size: 2vw;
+  }
+  .rectangle {
+    width: 60vw;
+    height: 65vw;
+    padding: 0.5em;
+    margin: auto;
+  }
+  .button-container {
+    bottom: 0.5em;
+  }
+  button {
+    padding: 1em;
+    margin: 2%;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --font-size: 5vw;
+    --warning-font-size: 3vw;
+  }
+  .rectangle {
+    width: 90vw;
+    height: 450px;
+  }
+  .containerProgressBar {
+    max-width: 90vw;
+  }
 }
