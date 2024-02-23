@@ -173,7 +173,7 @@ export class Quiz {
 
   // Update text
   madeWarning (time, number) {
-    let warning = '\u200B\n\u200B'
+    let warning = '';
     if (this.questions[this.randomQuestions[this.questionNumber]].timer) {
       warning += `Time left: ${time || this.questions[this.randomQuestions[this.questionNumber]].timer / 1000} seconds\n`
     }
